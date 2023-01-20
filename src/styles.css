@@ -1,6 +1,6 @@
 
 
-/* * {
+* {
     box-sizing: border-box;
     outline: none;
     font-size: calc(1vw + 6px);
@@ -94,4 +94,4 @@
   button {
     background-color: rgb(23, 5, 58);
     color: lightcyan;
-  } */
+  } 
