@@ -1,28 +1,57 @@
+// require the modules;
 require('dotenv').config()
+
+
+// Always require and configure near the top
 // Connect to the database
 require('./config/database');
 
 const express = require('express')
+
+
 const path = require('path') //comes with node.js 
+
+
+// Configure both serve-favicon & static middleware
+// to serve from the production 'build' folder
 const favicon = require('serve-favicon') //same spelling from npm 
-const logger = require('morgan') // because there more than one logger app beside morgan
-const PORT = process.env.PORT || 3001
+
+
+const logger = require('morgan') // there more than one logger app beside morgan
+
+
 // Configure to use port 3001 instead of 3000 during
 // development to avoid collision with React's dev server
+const PORT = process.env.PORT || 3001
 
+
+//create the Express app
 const app = express()
 
 
 // app.use(urlencoded({true})) replace by the following code to obtain req.body
+//express.json()middleware that processes JSON data 
+//sent in the AJAX request and adds it to the req.body
 app.use(express.json())// req.body
+
+
 app.use((req, res, next) => {
     res.locals.data = {}
     next()
 })
+
+
 // Configure both serve-favicon & static middleware
 // to serve from the production 'build' folder
+//mount the morgan logging middleware and 
 app.use(logger('dev')) // helps us debugged by letting us know when we make get request
+
+
+// Configure both serve-favicon & static middleware
+// to serve from the production 'build' folder
 app.use(favicon(path.join(__dirname, 'build', 'favicon.ico'))) // will let us put parts of the path
+
+
 //_dirname = current working directory 
 // go to the build directory 
 // go to favicon ico 

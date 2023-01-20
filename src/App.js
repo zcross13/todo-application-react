@@ -1,109 +1,199 @@
 import { useState, useEffect } from 'react'
+import TodoList from './components/TodoList'
 
-export default function FruitsPage (props){
+export default function App(props) {
+    // const [showInput, setShowInput] = useState(false)
     const [todos, setTodos] = useState([])
-    const [foundTodo, setFoundTodo] = useState(null)
+    const [completedTodo, setCompletedTodos] = useState([])
+    // const [foundTodo, setFoundTodo] = useState(null)
     const [newTodo, setNewTodo] = useState({
-        text: '',
+        title: '',
         completed: false,
     })
     // index
     const getTodos = async () => {
         try {
             const response = await fetch('/api/todos')
-            const data = await response.json()
-            setTodos(data)
+            const foundTodo = await response.json()
+            setTodos(foundTodo)
+            const responseTwo = await fetch('/api/todos/completed')
+            const foundCompletedTodo = await responseTwo.json()
+            setCompletedTodos(foundCompletedTodo)
         } catch (error) {
             console.error(error)
         }
     }
-    // delete
-    const deleteTodo = async (id) => {
-        try {
-            const response = await fetch(`/api/todos/${id}`, {
-                method: "DELETE",
+    // // delete
+    // const deleteTodo = async (id) => {
+    //     try {
+    //         const response = await fetch(`/api/todos/${id}`, {
+    //             method: "DELETE",
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         })
+    //         const data = await response.json()
+    //         setFoundTodo(data)
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
+    // // update
+    // const updateTodo = async (id, updatedTodo) => {
+    //     try {
+    //         const response = await fetch(`/api/todos/${id}`, {
+    //             method: "PUT",
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({ ...updatedTodo })
+    //         })
+    //         const data = await response.json()
+    //         setFoundTodo(data)
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
+    // createTodos
+    const createTodo = async () => {
+        const body = {...newTodo}
+        try{
+            const response = await fetch('/api/todos', {
+                method:"POST", 
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-type':'application/json'
+                }, 
+                body: JSON.stringify(body)
             })
-            const data = await response.json()
-            setFoundTodo(data)
-        } catch (error) {
+            // const createdTodo = await response.json()
+            // const todosCopy = [createdTodo, ...todos]
+            // setTodos(todosCopy)
+            // setNewTodo({
+            //     title:'',
+            //     completed: false
+            // })
+        } catch (error){
             console.error(error)
         }
     }
-    // update
-    const updateTodo = async (id, updatedTodo) => {
-        try {
-            const response = await fetch(`/api/fruits/${id}`, {
-                method: "PUT",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({...updatedTodo})
-            })
-            const data = await response.json()
-            setFoundTodo(data)
-        } catch (error) {
-            console.error(error)
-        }
-    }
-    // create
-        const createdTodo = async () => {
-            try {
-                const response = await fetch('/api/todos', {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({...newTodo})
-                })
-                const data = await response.json()
-                setFoundTodo(data)
-                setNewTodo({
-                    text: '',
-                    completed: false, 
-                })
-            } catch (error) {
-                console.error(error)
-            }
-        }
+    // const createTodo = async () => {
+    //     try {
+    //         const response = await fetch('/api/todos', {
+    //             method: "POST",
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({ ...newTodo })
+    //         })
+    //         const data = await response.json()
+    //         setFoundTodo(data)
+    //         setNewTodo({
+    //             text: '',
+    //             completed: false,
+    //         })
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // }
 
-    const handleChange = (evt) => {
-        setNewTodo({...newTodo, [evt.target.name]: evt.target.value})
-    }
+    // const completeTodo = (id, e) => {
+    //     const todosCopy = [...todos]
+    //     const indexOfTodo = todosCopy.findIndex((i) => i.id === id)
+    //     todosCopy[indexOfTodo].completed = !todosCopy[indexOfTodo].completed
+    //     setTodos([...todosCopy])
+    //   }
 
-    useEffect(()=> {
+    // const handleChange = (evt) => {
+    //     setNewTodo({ ...newTodo, [evt.target.name]: evt.target.value })
+    // }
+
+    useEffect(() => {
         getTodos()
-    }, [foundTodo])
+    }, [])
 
-    return (
+
+    // return (
+    //     <>
+    //         {
+    //             todos && todos.length ? (<ul>
+    //                 {
+    //                     todos.map((todo) => {
+    //                         return (
+    //                             <li>
+    //                                     <h2
+    //                                         onClick={(e) => {
+    //                                             setShowInput(!showInput)
+    //                                         }}
+    //                                     >
+    //                                         {todo.text}
+    //                                     </h2>
+    //                                     <input
+    //                                         style={{ display: showInput ? "block" : "none" }}
+    //                                         type="text"
+    //                                         onKeyDown={(e) => {
+    //                                             if (e.key === "Enter") {
+    //                                                 updateTodo(todo.id, e)
+    //                                                 setShowInput(false)
+    //                                             }
+    //                                         }}
+    //                                     />
+    //                                 <label className="middle">
+    //                                     Complete
+    //                                     <input
+    //                                         type="checkbox"
+    //                                         checked={todo.completed}
+    //                                         onChange={(e) => {
+    //                                             completeTodo(todo.id, e)
+    //                                         }}
+    //                                     />
+    //                                 </label>
+    //                                 <button
+    //                                     checked={todo.completed}
+    //                                     onClick={(e) => {
+    //                                         deleteTodo(todo.id)
+    //                                     }}
+    //                                 >
+    //                                     Delete Todo
+    //                                 </button>
+    //                             </li>
+    //                         )
+    //                     })
+    //                 }
+    //             </ul>) : <h1>No Todo Yet Add One Below</h1>
+    //         }
+    //         {'Text '}<input value={newTodo.text} onChange={handleChange} name="text"></input><br />
+    //         {/* {'Completed '}<input type="checkbox" checked={newTodo.completed} onChange={(evt) => setNewTodo({ ...newTodo, completed: evt.target.checked })}></input><br /> */}
+    //         <button onClick={() => createTodo()}>Create A New To Do</button>
+    //         {
+    //             foundTodo ? <div>
+    //                 <h1>{foundTodo.text}</h1>
+    //                 <h3>{foundTodo.completed ? 'I am ready' : 'I am not ready'}</h3>
+    //             </div> : <>No To Do Found in To Do State</>
+    //         }
+    //     </>
+    // )
+
+    return(
         <>
-            {
-                todos && todos.length ? (<ul>
-                    {
-                        todos.map((todo) => {
-                            return (
-                                <li key={todo._id}>
-                                    {todo.text}  {todo.completed? 'completed' : ' not completed'}
-                                    <br/><button onClick={() => deleteTodo(todo._id)}>Delete</button>
-                                </li>
-                            )
-                        })
-                    }
-                </ul>): <h1>No Todo Yet Add One Below</h1>
-            }
-            {'Text '}<input value={newTodo.text} onChange={handleChange} name="text"></input><br/>
-            {'Completed'}<input value={newTodo.completed} onChange={handleChange} name="completed"></input><br/>
-            {'Completed '}<input type="checkbox" checked={newTodo.completed} onChange={(evt) => setNewTodo({...newTodo, completed: evt.target.checked })}></input><br/>
-            <button onClick={() => createdTodo() }>Create A New To Do</button>
-            {
-                foundTodo? <div>
-                    <h1>{foundTodo.text}</h1>
-                    <h3>{foundTodo.completed? 'I am ready': 'I am not ready'}</h3>
-                </div>: <>No To Do Found in To Do State</>
-            }
+        Add Todo<input type='text' 
+        value={newTodo.title} 
+        onChange={(e) => {setNewTodo({...newTodo, title:e.target.value})}} 
+        onKeyDown={(e) => e.key === 'Enter' && createTodo()}/>
+
+        <h3>Todos</h3>
+        {todos.map(todo => <div key={todo.id}>{todo.title}</div>)}
+        <h3>Completed Todos</h3>
+        {completeTodo.map(todo => <div key={todo.id}>{todo.title}</div>)}
         </>
+        // <TodoList 
+        // todos = {todos}
+        // foundTodo = {foundTodo}
+        // newTodo =  {newTodo}
+        // handleChange = {handleChange}
+        // completeTodo = {completeTodo} 
+        // createTodo={createTodo}
+        // updateTodo={updateTodo}
+        // deleteTodo={deleteTodo}/>
     )
 }
 

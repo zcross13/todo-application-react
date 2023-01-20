@@ -1,7 +1,7 @@
 const {Schema, model} = require('mongoose')
 
 const toDoSchema = new Schema({
-    text: String, 
+    title: String, 
     completed: Boolean, 
 })
 
